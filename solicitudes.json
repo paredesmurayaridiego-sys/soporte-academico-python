@@ -1,0 +1,71 @@
+[
+    {
+        "nombre": "rodrigo",
+        "codigo": "12345",
+        "consulta": "matricula",
+        "detalle": "quiero informacion sobre mi matricula",
+        "prioridad": "alta",
+        "estado": "Atendida",
+        "fecha": "20/09/2026 16:55"
+    },
+    {
+        "nombre": "n00530756",
+        "codigo": "n00530756",
+        "consulta": "matricula",
+        "detalle": "quiero informacion sobre mi matricula",
+        "prioridad": "Alta",
+        "estado": "Atendido"
+    },
+    {
+        "nombre": "rodrigo",
+        "codigo": "n00530755",
+        "consulta": "informacion de matricula",
+        "detalle": "informacion",
+        "prioridad": "Alta",
+        "estado": "Pendiente"
+    },
+    {
+        "nombre": "Diego",
+        "codigo": "n00530758",
+        "consulta": "informacion",
+        "detalle": "consulta",
+        "prioridad": "Alta",
+        "estado": "Pendiente"
+    },
+    {
+        "nombre": "diego paredes",
+        "codigo": "n00540780",
+        "consulta": "informacion de matricula",
+        "detalle": "nesecito informacion de mi matricula",
+        "prioridad": "Alta",
+        "estado": "Pendiente"
+    },
+    {
+        "nombre": "Diego Paredes",
+        "codigo": "n00530760",
+        "consulta": "matricula",
+        "detalle": "quiero informacion sobre mi matricula",
+        "prioridad": "Alta",
+        "estado": "Pendiente"
+    },
+    {
+        "nombre": "diego",
+        "codigo": "n00540700",
+        "consulta": "matricula",
+        "detalle": "consulta sobre matricula",
+        "prioridad": "Alta",
+        "estado": "Atendido",
+        "fecha": "20/09/2026 23:45",
+        "ultima_actualizacion": "20/09/2026 23:48"
+    },
+    {
+        "nombre": "Diego Paredes",
+        "codigo": "n00535630",
+        "consulta": "matricula",
+        "detalle": "necesito informacion sobre mi matricula",
+        "prioridad": "Alta",
+        "estado": "En proceso",
+        "fecha": "21/09/2026 00:07",
+        "ultima_actualizacion": "21/09/2026 00:08"
+    }
+]
