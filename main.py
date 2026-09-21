@@ -87,7 +87,43 @@ def mostrar_menu():
     print("4. Mostrar solicitudes")
     print("5. Salir")
     print("6. Mostrar estadísticas")
+    print("7. Ayuda del sistema")
     print("----------------------------------------------")
+
+
+def mostrar_ayuda():
+    print("\n==============================================")
+    print("              AYUDA DEL SISTEMA")
+    print("==============================================")
+    print("1. Registrar solicitud")
+    print("   Permite ingresar una nueva solicitud")
+    print("   de un estudiante.")
+
+    print("\n2. Buscar solicitud")
+    print("   Permite buscar una solicitud por")
+    print("   código o nombre del estudiante.")
+
+    print("\n3. Actualizar estado")
+    print("   Permite cambiar el estado de una")
+    print("   solicitud a Pendiente, En proceso")
+    print("   o Atendido.")
+
+    print("\n4. Mostrar solicitudes")
+    print("   Permite visualizar solicitudes aplicando")
+    print("   filtros por estado o prioridad.")
+
+    print("\n5. Salir")
+    print("   Permite cerrar el sistema.")
+
+    print("\n6. Mostrar estadísticas")
+    print("   Muestra un resumen de las solicitudes")
+    print("   registradas por estado y prioridad.")
+
+    print("\n7. Ayuda del sistema")
+    print("   Muestra información sobre las opciones")
+    print("   disponibles en el sistema.")
+
+    print("\n==============================================")
 
 
 def registrar_solicitud(solicitudes):
@@ -570,9 +606,12 @@ def main():
         elif opcion == "6":
             mostrar_estadisticas(solicitudes)
 
+        elif opcion == "7":
+            mostrar_ayuda()
+
         else:
             print("\n[ERROR] Opción inválida.")
-            print("Seleccione una opción del 1 al 6.")
+            print("Seleccione una opción del 1 al 7.")
 
 
 if __name__ == "__main__":
