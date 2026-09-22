@@ -611,7 +611,8 @@ def main():
 
         else:
             print("\n[ERROR] Opción inválida.")
-            print("Seleccione una opción del 1 al 7.")
+            print("Debe ingresar un número del 1 al 7.")
+            print("Intente nuevamente.")
 
 
 if __name__ == "__main__":
