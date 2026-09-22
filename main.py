@@ -22,14 +22,17 @@ def validar_codigo(codigo):
 
     if codigo == "":
         print("[ERROR] El código no puede estar vacío.")
+        print("Debe ingresar un código de estudiante.")
         return False
 
     if len(codigo) < 5:
         print("[ERROR] El código debe tener como mínimo 5 caracteres.")
+        print("Ejemplo: N00530756")
         return False
 
     if not codigo.isalnum():
         print("[ERROR] El código solo debe contener letras y números.")
+        print("No debe ingresar espacios ni símbolos.")
         return False
 
     return True
@@ -171,7 +174,7 @@ def registrar_solicitud(solicitudes):
 
     print("\n[SUCCESS] Solicitud registrada correctamente.")
     print(f"Código: {codigo}")
-    print(f"Estado: Pendiente")
+    print("Estado: Pendiente")
     print(f"Fecha: {fecha_actual}")
 
 
