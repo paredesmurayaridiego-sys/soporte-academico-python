@@ -55,8 +55,16 @@ def validar_nombre(nombre):
 
 
 def validar_detalle(detalle):
-    if detalle.strip() == "":
-        print("[ERROR] El detalle no puede estar vacío.")
+    detalle = detalle.strip()
+
+    if detalle == "":
+        print("[ERROR] El detalle de la solicitud no puede estar vacío.")
+        print("Debe explicar brevemente el problema o consulta.")
+        return False
+
+    if len(detalle) < 5:
+        print("[ERROR] El detalle es demasiado corto.")
+        print("Ingrese al menos 5 caracteres para explicar la solicitud.")
         return False
 
     return True
@@ -431,3 +439,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
