@@ -1,4 +1,4 @@
-# Sistema de Orientación y Registro de Atenciones
+﻿# Sistema de Orientación y Registro de Atenciones
 
 ## Información del proyecto
 
@@ -10,7 +10,7 @@
 
 **Integrantes:**
 
-* [Completar con nombres y códigos de los integrantes]
+* Diego Albeiro Paredes Murayari — N00530756
 
 ## Descripción
 
@@ -216,3 +216,4 @@ Para ejecutar el programa:
 ```bash
 python main.py
 ```
+
