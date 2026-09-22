@@ -1,19 +1,27 @@
+# Sistema de Orientación y Registro de Atenciones
+# Soporte Académico
+
 import json
+import os
 from datetime import datetime
 
-ARCHIVO = "solicitudes.json"
+
+ARCHIVO_JSON = "solicitudes.json"
 
 
 def cargar_solicitudes():
+    if not os.path.exists(ARCHIVO_JSON):
+        return []
+
     try:
-        with open(ARCHIVO, "r", encoding="utf-8") as archivo:
+        with open(ARCHIVO_JSON, "r", encoding="utf-8") as archivo:
             return json.load(archivo)
-    except FileNotFoundError:
+    except:
         return []
 
 
 def guardar_solicitudes(solicitudes):
-    with open(ARCHIVO, "w", encoding="utf-8") as archivo:
+    with open(ARCHIVO_JSON, "w", encoding="utf-8") as archivo:
         json.dump(solicitudes, archivo, indent=4, ensure_ascii=False)
 
 
@@ -46,7 +54,9 @@ def validar_nombre(nombre):
         print("Debe ingresar el nombre completo del estudiante.")
         return False
 
-    if not all(caracter.isalpha() or caracter.isspace() for caracter in nombre):
+    nombre_sin_espacios = nombre.replace(" ", "")
+
+    if not nombre_sin_espacios.isalpha():
         print("[ERROR] El nombre solo debe contener letras y espacios.")
         print("No debe ingresar números ni símbolos.")
         return False
@@ -105,9 +115,12 @@ def validar_prioridad(prioridad):
 
 
 def mostrar_encabezado():
-    print("\n==========================================")
+    print("\n========================================")
     print("     SISTEMA DE SOPORTE ACADÉMICO")
-    print("==========================================")
+    print("========================================")
+    print(" Sistema de Orientación y Registro")
+    print("          de Atenciones")
+    print("========================================")
 
 
 def mostrar_menu():
@@ -122,289 +135,390 @@ def mostrar_menu():
 
 
 def mostrar_ayuda():
-    print("\n========== AYUDA DEL SISTEMA ==========")
-
+    print("\n===== AYUDA DEL SISTEMA =====")
     print("1. Registrar solicitud:")
     print("   Permite registrar una nueva atención académica.")
 
     print("\n2. Buscar solicitud:")
-    print("   Permite buscar una solicitud por código o nombre.")
+    print("   Permite buscar solicitudes por código o nombre.")
 
     print("\n3. Actualizar estado:")
     print("   Permite cambiar el estado de una solicitud.")
 
     print("\n4. Mostrar solicitudes:")
-    print("   Permite visualizar las solicitudes registradas.")
+    print("   Permite visualizar solicitudes según diferentes filtros.")
 
     print("\n5. Salir:")
     print("   Permite cerrar el sistema.")
 
     print("\n6. Mostrar estadísticas:")
-    print("   Muestra un resumen de las solicitudes.")
+    print("   Muestra un resumen de las solicitudes registradas.")
 
     print("\n7. Ayuda del sistema:")
     print("   Muestra información sobre las opciones disponibles.")
-
-    print("=======================================")
 
 
 def registrar_solicitud(solicitudes):
     print("\n===== REGISTRAR SOLICITUD =====")
 
     while True:
-        codigo = input("Código del estudiante: ").strip()
-
-        if not validar_codigo(codigo):
-            continue
-
-        if any(s["codigo"].lower() == codigo.lower() for s in solicitudes):
-            print("[ERROR] Ya existe una solicitud con ese código.")
-            continue
-
-        break
-
-    while True:
-        nombre = input("Nombre del estudiante: ").strip()
+        nombre = input("Ingrese el nombre del estudiante: ")
 
         if validar_nombre(nombre):
             break
 
     while True:
-        consulta = input("Tipo de consulta: ").strip()
+        codigo = input("Ingrese el código del estudiante: ")
+
+        if validar_codigo(codigo):
+            break
+
+    while True:
+        consulta = input("Ingrese la consulta: ")
 
         if validar_consulta(consulta):
             break
 
     while True:
-        detalle = input("Detalle de la solicitud: ").strip()
+        detalle = input("Ingrese el detalle de la solicitud: ")
 
         if validar_detalle(detalle):
             break
 
     while True:
-        prioridad = input(
-            "Prioridad (Alta/Media/Baja): "
-        ).strip().capitalize()
+        prioridad = input("Ingrese la prioridad (Alta/Media/Baja): ")
 
         if validar_prioridad(prioridad):
             break
 
+    for solicitud in solicitudes:
+        if solicitud["codigo"].lower() == codigo.strip().lower():
+            print("\nEl código del estudiante ya está registrado.")
+            print("No se puede registrar otra solicitud con el mismo código.")
+            return
+
     fecha_actual = datetime.now().strftime("%d/%m/%Y %H:%M")
 
     solicitud = {
-        "codigo": codigo,
-        "nombre": nombre,
-        "consulta": consulta,
-        "detalle": detalle,
-        "prioridad": prioridad,
+        "nombre": nombre.strip(),
+        "codigo": codigo.strip(),
+        "consulta": consulta.strip(),
+        "detalle": detalle.strip(),
+        "prioridad": prioridad.strip().capitalize(),
         "estado": "Pendiente",
         "fecha": fecha_actual,
         "ultima_actualizacion": fecha_actual
     }
 
-    solicitudes.append(solicitud)
-    guardar_solicitudes(solicitudes)
+    print("\n===== CONFIRMAR SOLICITUD =====")
+    print("Nombre:", solicitud["nombre"])
+    print("Código:", solicitud["codigo"])
+    print("Consulta:", solicitud["consulta"])
+    print("Detalle:", solicitud["detalle"])
+    print("Prioridad:", solicitud["prioridad"])
+    print("Estado:", solicitud["estado"])
+    print("Fecha y hora:", solicitud["fecha"])
+    print("Última actualización:", solicitud["ultima_actualizacion"])
 
-    print("\n[SUCCESS] Solicitud registrada correctamente.")
-    print(f"Código: {codigo}")
-    print("Estado: Pendiente")
-    print(f"Fecha: {fecha_actual}")
+    confirmacion = input("\n¿Desea registrar esta solicitud? (S/N): ")
+
+    if confirmacion.strip().lower() == "s":
+        solicitudes.append(solicitud)
+        guardar_solicitudes(solicitudes)
+
+        print("\n[SUCCESS] Solicitud registrada correctamente.")
+        print("Código:", solicitud["codigo"])
+        print("Estado:", solicitud["estado"])
+        print("Fecha:", solicitud["fecha"])
+
+    elif confirmacion.strip().lower() == "n":
+        print("\nRegistro cancelado.")
+
+    else:
+        print("\nOpción inválida.")
+        print("La solicitud no fue registrada.")
 
 
 def buscar_solicitud(solicitudes):
     print("\n===== BUSCAR SOLICITUD =====")
+    print("1. Buscar por código")
+    print("2. Buscar por nombre")
 
-    if not solicitudes:
-        print("[INFO] No existen solicitudes registradas.")
-        return
+    opcion = input("\nSeleccione una opción: ")
 
-    busqueda = input(
-        "Ingrese código o nombre: "
-    ).strip().lower()
+    if opcion == "1":
 
-    encontrados = []
+        codigo = input("Ingrese el código del estudiante: ")
 
-    for solicitud in solicitudes:
-        if (
-            busqueda in solicitud["codigo"].lower()
-            or busqueda in solicitud["nombre"].lower()
-        ):
-            encontrados.append(solicitud)
+        if codigo.strip() == "":
+            print("\n[ERROR] El código de búsqueda no puede estar vacío.")
+            print("Debe ingresar un código para realizar la búsqueda.")
+            return
 
-    if not encontrados:
-        print("[INFO] No se encontraron solicitudes.")
-        return
+        if not validar_codigo(codigo):
+            return
 
-    for solicitud in encontrados:
-        print("\n--------------------------------")
-        print(f"Código: {solicitud['codigo']}")
-        print(f"Nombre: {solicitud['nombre']}")
-        print(f"Consulta: {solicitud['consulta']}")
-        print(f"Detalle: {solicitud['detalle']}")
-        print(f"Prioridad: {solicitud['prioridad']}")
-        print(f"Estado: {solicitud['estado']}")
-        print(
-            f"Fecha: "
-            f"{solicitud.get('fecha', 'No registrada')}"
-        )
-        print(
-            f"Última actualización: "
-            f"{solicitud.get('ultima_actualizacion', 'No registrada')}"
-        )
-        print("--------------------------------")
+        encontrado = False
+
+        for solicitud in solicitudes:
+
+            if solicitud["codigo"].lower() == codigo.strip().lower():
+
+                print("\n===== SOLICITUD ENCONTRADA =====")
+                print("Nombre:", solicitud["nombre"])
+                print("Código:", solicitud["codigo"])
+                print("Consulta:", solicitud["consulta"])
+                print("Detalle:", solicitud["detalle"])
+                print("Prioridad:", solicitud["prioridad"].strip().capitalize())
+                print("Estado:", solicitud["estado"])
+
+                if "fecha" in solicitud:
+                    print("Fecha y hora:", solicitud["fecha"])
+                else:
+                    print("Fecha y hora: No registrada")
+
+                if "ultima_actualizacion" in solicitud:
+                    print("Última actualización:", solicitud["ultima_actualizacion"])
+                else:
+                    print("Última actualización: No registrada")
+
+                encontrado = True
+                break
+
+        if not encontrado:
+            print("\nNo se encontró ninguna solicitud con ese código.")
+
+    elif opcion == "2":
+
+        nombre = input("Ingrese el nombre del estudiante: ")
+
+        if nombre.strip() == "":
+            print("\n[ERROR] El nombre de búsqueda no puede estar vacío.")
+            print("Debe ingresar un nombre para realizar la búsqueda.")
+            return
+
+        encontrado = False
+
+        for solicitud in solicitudes:
+
+            if nombre.strip().lower() in solicitud["nombre"].lower():
+
+                print("\n===== SOLICITUD ENCONTRADA =====")
+                print("Nombre:", solicitud["nombre"])
+                print("Código:", solicitud["codigo"])
+                print("Consulta:", solicitud["consulta"])
+                print("Detalle:", solicitud["detalle"])
+                print("Prioridad:", solicitud["prioridad"].strip().capitalize())
+                print("Estado:", solicitud["estado"])
+
+                if "fecha" in solicitud:
+                    print("Fecha y hora:", solicitud["fecha"])
+                else:
+                    print("Fecha y hora: No registrada")
+
+                if "ultima_actualizacion" in solicitud:
+                    print("Última actualización:", solicitud["ultima_actualizacion"])
+                else:
+                    print("Última actualización: No registrada")
+
+                print("------------------------------")
+
+                encontrado = True
+
+        if not encontrado:
+            print("\nNo se encontró ninguna solicitud con ese nombre.")
+
+    else:
+        print("\nOpción inválida.")
 
 
 def actualizar_estado(solicitudes):
     print("\n===== ACTUALIZAR ESTADO =====")
 
-    if not solicitudes:
-        print("[INFO] No existen solicitudes registradas.")
+    codigo = input("Ingrese el código del estudiante: ")
+
+    if codigo.strip() == "":
+        print("\nError: el código no puede estar vacío.")
         return
 
-    codigo = input(
-        "Ingrese el código de la solicitud: "
-    ).strip()
-
-    solicitud_encontrada = None
+    if not validar_codigo(codigo):
+        return
 
     for solicitud in solicitudes:
-        if solicitud["codigo"].lower() == codigo.lower():
-            solicitud_encontrada = solicitud
-            break
 
-    if solicitud_encontrada is None:
-        print("[ERROR] No se encontró una solicitud con ese código.")
-        return
+        if solicitud["codigo"].lower() == codigo.strip().lower():
 
-    print(
-        f"\nSolicitud encontrada: "
-        f"{solicitud_encontrada['nombre']}"
-    )
+            print("\nEstados disponibles:")
+            print("1. Pendiente")
+            print("2. En proceso")
+            print("3. Atendido")
 
-    print(
-        f"Estado actual: "
-        f"{solicitud_encontrada['estado']}"
-    )
+            opcion = input("Seleccione el nuevo estado: ")
 
-    print("\nEstados disponibles:")
-    print("1. Pendiente")
-    print("2. En proceso")
-    print("3. Atendido")
+            if opcion == "1":
+                nuevo_estado = "Pendiente"
 
-    opcion = input(
-        "Seleccione el nuevo estado: "
-    ).strip()
+            elif opcion == "2":
+                nuevo_estado = "En proceso"
 
-    estados = {
-        "1": "Pendiente",
-        "2": "En proceso",
-        "3": "Atendido"
-    }
+            elif opcion == "3":
+                nuevo_estado = "Atendido"
 
-    if opcion not in estados:
-        print("[ERROR] Opción de estado inválida.")
-        return
+            else:
+                print("\nOpción inválida.")
+                return
 
-    nuevo_estado = estados[opcion]
+            if solicitud["estado"] == nuevo_estado:
+                print("\nLa solicitud ya se encuentra en este estado.")
+                return
 
-    if nuevo_estado == solicitud_encontrada["estado"]:
-        print("[INFO] La solicitud ya se encuentra en ese estado.")
-        return
+            solicitud["estado"] = nuevo_estado
 
-    solicitud_encontrada["estado"] = nuevo_estado
+            fecha_actualizacion = datetime.now().strftime("%d/%m/%Y %H:%M")
+            solicitud["ultima_actualizacion"] = fecha_actualizacion
 
-    solicitud_encontrada["ultima_actualizacion"] = (
-        datetime.now().strftime("%d/%m/%Y %H:%M")
-    )
+            guardar_solicitudes(solicitudes)
 
-    guardar_solicitudes(solicitudes)
+            print("\nEstado actualizado correctamente.")
+            print("Nuevo estado:", nuevo_estado)
+            print("Última actualización:", fecha_actualizacion)
 
-    print("\n[SUCCESS] Estado actualizado correctamente.")
-    print(f"Nuevo estado: {nuevo_estado}")
+            return
+
+    print("\nNo se encontró ninguna solicitud con ese código.")
 
 
 def mostrar_solicitudes(solicitudes):
     print("\n===== MOSTRAR SOLICITUDES =====")
+    print("1. Pendientes")
+    print("2. En proceso")
+    print("3. Atendidas")
+    print("4. Prioridad Alta")
+    print("5. Prioridad Media")
+    print("6. Prioridad Baja")
+    print("7. Todas")
 
-    if not solicitudes:
-        print("[INFO] No existen solicitudes registradas.")
+    opcion = input("\nSeleccione una opción: ")
+
+    if opcion not in ["1", "2", "3", "4", "5", "6", "7"]:
+        print("\nOpción inválida.")
         return
 
-    print("\nFiltros disponibles:")
-    print("1. Todas")
-    print("2. Pendientes")
-    print("3. En proceso")
-    print("4. Atendidas")
-    print("5. Prioridad Alta")
-    print("6. Prioridad Media")
-    print("7. Prioridad Baja")
+    if len(solicitudes) == 0:
+        print("\nNo hay solicitudes registradas.")
+        return
 
-    opcion = input(
-        "Seleccione un filtro: "
-    ).strip()
+    if opcion == "1":
+        tipo_filtro = "estado"
+        filtro = "pendiente"
+        titulo = "SOLICITUDES PENDIENTES"
 
-    solicitudes_filtradas = []
+    elif opcion == "2":
+        tipo_filtro = "estado"
+        filtro = "en proceso"
+        titulo = "SOLICITUDES EN PROCESO"
+
+    elif opcion == "3":
+        tipo_filtro = "estado"
+        filtro = "atendido"
+        titulo = "SOLICITUDES ATENDIDAS"
+
+    elif opcion == "4":
+        tipo_filtro = "prioridad"
+        filtro = "alta"
+        titulo = "SOLICITUDES DE PRIORIDAD ALTA"
+
+    elif opcion == "5":
+        tipo_filtro = "prioridad"
+        filtro = "media"
+        titulo = "SOLICITUDES DE PRIORIDAD MEDIA"
+
+    elif opcion == "6":
+        tipo_filtro = "prioridad"
+        filtro = "baja"
+        titulo = "SOLICITUDES DE PRIORIDAD BAJA"
+
+    else:
+        tipo_filtro = "todas"
+        filtro = "todas"
+        titulo = "TODAS LAS SOLICITUDES"
+
+    pendientes = 0
+    en_proceso = 0
+    atendidas = 0
 
     for solicitud in solicitudes:
 
-        estado = solicitud.get("estado", "")
-        prioridad = solicitud.get("prioridad", "")
+        estado = solicitud["estado"].strip().lower()
 
-        if opcion == "1":
-            solicitudes_filtradas.append(solicitud)
+        if estado == "pendiente":
+            pendientes += 1
 
-        elif opcion == "2" and estado == "Pendiente":
-            solicitudes_filtradas.append(solicitud)
+        elif estado == "en proceso":
+            en_proceso += 1
 
-        elif opcion == "3" and estado == "En proceso":
-            solicitudes_filtradas.append(solicitud)
+        elif estado == "atendido" or estado == "atendida":
+            atendidas += 1
 
-        elif opcion == "4" and estado in [
-            "Atendido",
-            "Atendida"
-        ]:
-            solicitudes_filtradas.append(solicitud)
+    print("\n===== RESUMEN DE SOLICITUDES =====")
+    print("Total de solicitudes:", len(solicitudes))
+    print("Pendientes:", pendientes)
+    print("En proceso:", en_proceso)
+    print("Atendidas:", atendidas)
 
-        elif opcion == "5" and prioridad == "Alta":
-            solicitudes_filtradas.append(solicitud)
+    print("\n=====", titulo, "=====")
 
-        elif opcion == "6" and prioridad == "Media":
-            solicitudes_filtradas.append(solicitud)
+    contador = 0
 
-        elif opcion == "7" and prioridad == "Baja":
-            solicitudes_filtradas.append(solicitud)
+    for solicitud in solicitudes:
 
-    if not solicitudes_filtradas:
-        print(
-            "[INFO] No existen solicitudes para "
-            "el filtro seleccionado."
-        )
-        return
+        estado = solicitud["estado"].strip().lower()
+        prioridad = solicitud["prioridad"].strip().lower()
 
-    print("\n===== RESULTADOS =====")
+        if tipo_filtro == "estado":
 
-    for solicitud in solicitudes_filtradas:
+            if filtro == "atendido":
 
-        print("\n--------------------------------")
-        print(f"Código: {solicitud['codigo']}")
-        print(f"Nombre: {solicitud['nombre']}")
-        print(f"Consulta: {solicitud['consulta']}")
-        print(f"Detalle: {solicitud['detalle']}")
-        print(f"Prioridad: {solicitud['prioridad']}")
-        print(f"Estado: {solicitud['estado']}")
-        print(
-            f"Fecha: "
-            f"{solicitud.get('fecha', 'No registrada')}"
-        )
-        print(
-            f"Última actualización: "
-            f"{solicitud.get('ultima_actualizacion', 'No registrada')}"
-        )
-        print("--------------------------------")
+                if estado != "atendido" and estado != "atendida":
+                    continue
+
+            elif estado != filtro:
+                continue
+
+        elif tipo_filtro == "prioridad":
+
+            if prioridad != filtro:
+                continue
+
+        contador += 1
+
+        print("\nSolicitud N.º", contador)
+        print("------------------------------")
+        print("Nombre:", solicitud["nombre"])
+        print("Código:", solicitud["codigo"])
+        print("Consulta:", solicitud["consulta"])
+        print("Detalle:", solicitud["detalle"])
+        print("Prioridad:", solicitud["prioridad"].strip().capitalize())
+        print("Estado:", solicitud["estado"])
+
+        if "fecha" in solicitud:
+            print("Fecha y hora:", solicitud["fecha"])
+        else:
+            print("Fecha y hora: No registrada")
+
+        if "ultima_actualizacion" in solicitud:
+            print("Última actualización:", solicitud["ultima_actualizacion"])
+        else:
+            print("Última actualización: No registrada")
+
+        print("------------------------------")
+
+    if contador == 0:
+        print("\nNo hay solicitudes que coincidan con ese filtro.")
 
 
 def mostrar_estadisticas(solicitudes):
-    print("\n===== ESTADÍSTICAS =====")
+    print("\n===== ESTADÍSTICAS DEL SISTEMA =====")
 
     total = len(solicitudes)
 
@@ -412,44 +526,44 @@ def mostrar_estadisticas(solicitudes):
     en_proceso = 0
     atendidas = 0
 
-    alta = 0
-    media = 0
-    baja = 0
+    prioridad_alta = 0
+    prioridad_media = 0
+    prioridad_baja = 0
 
     for solicitud in solicitudes:
 
-        estado = solicitud.get("estado", "")
-        prioridad = solicitud.get("prioridad", "")
+        estado = solicitud["estado"].strip().lower()
+        prioridad = solicitud["prioridad"].strip().lower()
 
-        if estado == "Pendiente":
+        if estado == "pendiente":
             pendientes += 1
 
-        elif estado == "En proceso":
+        elif estado == "en proceso":
             en_proceso += 1
 
-        elif estado in ["Atendido", "Atendida"]:
+        elif estado == "atendido" or estado == "atendida":
             atendidas += 1
 
-        if prioridad == "Alta":
-            alta += 1
+        if prioridad == "alta":
+            prioridad_alta += 1
 
-        elif prioridad == "Media":
-            media += 1
+        elif prioridad == "media":
+            prioridad_media += 1
 
-        elif prioridad == "Baja":
-            baja += 1
+        elif prioridad == "baja":
+            prioridad_baja += 1
 
-    print(f"\nTotal de solicitudes: {total}")
+    print("\nTotal de solicitudes:", total)
 
-    print("\nPor estado:")
-    print(f"- Pendientes: {pendientes}")
-    print(f"- En proceso: {en_proceso}")
-    print(f"- Atendidas: {atendidas}")
+    print("\n--- POR ESTADO ---")
+    print("Pendientes:", pendientes)
+    print("En proceso:", en_proceso)
+    print("Atendidas:", atendidas)
 
-    print("\nPor prioridad:")
-    print(f"- Alta: {alta}")
-    print(f"- Media: {media}")
-    print(f"- Baja: {baja}")
+    print("\n--- POR PRIORIDAD ---")
+    print("Alta:", prioridad_alta)
+    print("Media:", prioridad_media)
+    print("Baja:", prioridad_baja)
 
 
 def main():
@@ -461,9 +575,7 @@ def main():
 
         mostrar_menu()
 
-        opcion = input(
-            "\nSeleccione una opción: "
-        ).strip()
+        opcion = input("\nSeleccione una opción: ")
 
         if opcion == "1":
             registrar_solicitud(solicitudes)
@@ -478,19 +590,8 @@ def main():
             mostrar_solicitudes(solicitudes)
 
         elif opcion == "5":
-
-            confirmar = input(
-                "\n¿Está seguro que desea salir? (S/N): "
-            ).strip().upper()
-
-            if confirmar == "S":
-                print("\nGracias por utilizar el sistema.")
-                break
-
-            else:
-                print(
-                    "\nRegresando al menú principal..."
-                )
+            print("\nGracias por utilizar el sistema.")
+            break
 
         elif opcion == "6":
             mostrar_estadisticas(solicitudes)
@@ -499,9 +600,7 @@ def main():
             mostrar_ayuda()
 
         else:
-            print("\n[ERROR] Opción inválida.")
-            print("Debe ingresar un número del 1 al 7.")
-            print("Intente nuevamente.")
+            print("\nOpción inválida. Intente nuevamente.")
 
 
 if __name__ == "__main__":
