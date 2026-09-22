@@ -71,8 +71,16 @@ def validar_detalle(detalle):
 
 
 def validar_consulta(consulta):
-    if consulta.strip() == "":
+    consulta = consulta.strip()
+
+    if consulta == "":
         print("[ERROR] La consulta no puede estar vacía.")
+        print("Debe indicar el tipo de consulta.")
+        return False
+
+    if len(consulta) < 4:
+        print("[ERROR] El tipo de consulta es demasiado corto.")
+        print("Ingrese al menos 4 caracteres.")
         return False
 
     return True
@@ -108,20 +116,28 @@ def mostrar_menu():
 
 def mostrar_ayuda():
     print("\n========== AYUDA DEL SISTEMA ==========")
+
     print("1. Registrar solicitud:")
     print("   Permite registrar una nueva atención académica.")
+
     print("\n2. Buscar solicitud:")
     print("   Permite buscar una solicitud por código o nombre.")
+
     print("\n3. Actualizar estado:")
     print("   Permite cambiar el estado de una solicitud.")
+
     print("\n4. Mostrar solicitudes:")
     print("   Permite visualizar las solicitudes registradas.")
+
     print("\n5. Salir:")
     print("   Permite cerrar el sistema.")
+
     print("\n6. Mostrar estadísticas:")
     print("   Muestra un resumen de las solicitudes.")
+
     print("\n7. Ayuda del sistema:")
     print("   Muestra información sobre las opciones disponibles.")
+
     print("=======================================")
 
 
@@ -159,7 +175,9 @@ def registrar_solicitud(solicitudes):
             break
 
     while True:
-        prioridad = input("Prioridad (Alta/Media/Baja): ").strip().capitalize()
+        prioridad = input(
+            "Prioridad (Alta/Media/Baja): "
+        ).strip().capitalize()
 
         if validar_prioridad(prioridad):
             break
@@ -193,7 +211,9 @@ def buscar_solicitud(solicitudes):
         print("[INFO] No existen solicitudes registradas.")
         return
 
-    busqueda = input("Ingrese código o nombre: ").strip().lower()
+    busqueda = input(
+        "Ingrese código o nombre: "
+    ).strip().lower()
 
     encontrados = []
 
@@ -216,7 +236,10 @@ def buscar_solicitud(solicitudes):
         print(f"Detalle: {solicitud['detalle']}")
         print(f"Prioridad: {solicitud['prioridad']}")
         print(f"Estado: {solicitud['estado']}")
-        print(f"Fecha: {solicitud.get('fecha', 'No registrada')}")
+        print(
+            f"Fecha: "
+            f"{solicitud.get('fecha', 'No registrada')}"
+        )
         print(
             f"Última actualización: "
             f"{solicitud.get('ultima_actualizacion', 'No registrada')}"
@@ -231,7 +254,9 @@ def actualizar_estado(solicitudes):
         print("[INFO] No existen solicitudes registradas.")
         return
 
-    codigo = input("Ingrese el código de la solicitud: ").strip()
+    codigo = input(
+        "Ingrese el código de la solicitud: "
+    ).strip()
 
     solicitud_encontrada = None
 
@@ -244,15 +269,24 @@ def actualizar_estado(solicitudes):
         print("[ERROR] No se encontró una solicitud con ese código.")
         return
 
-    print(f"\nSolicitud encontrada: {solicitud_encontrada['nombre']}")
-    print(f"Estado actual: {solicitud_encontrada['estado']}")
+    print(
+        f"\nSolicitud encontrada: "
+        f"{solicitud_encontrada['nombre']}"
+    )
+
+    print(
+        f"Estado actual: "
+        f"{solicitud_encontrada['estado']}"
+    )
 
     print("\nEstados disponibles:")
     print("1. Pendiente")
     print("2. En proceso")
     print("3. Atendido")
 
-    opcion = input("Seleccione el nuevo estado: ").strip()
+    opcion = input(
+        "Seleccione el nuevo estado: "
+    ).strip()
 
     estados = {
         "1": "Pendiente",
@@ -271,8 +305,9 @@ def actualizar_estado(solicitudes):
         return
 
     solicitud_encontrada["estado"] = nuevo_estado
-    solicitud_encontrada["ultima_actualizacion"] = datetime.now().strftime(
-        "%d/%m/%Y %H:%M"
+
+    solicitud_encontrada["ultima_actualizacion"] = (
+        datetime.now().strftime("%d/%m/%Y %H:%M")
     )
 
     guardar_solicitudes(solicitudes)
@@ -297,11 +332,14 @@ def mostrar_solicitudes(solicitudes):
     print("6. Prioridad Media")
     print("7. Prioridad Baja")
 
-    opcion = input("Seleccione un filtro: ").strip()
+    opcion = input(
+        "Seleccione un filtro: "
+    ).strip()
 
     solicitudes_filtradas = []
 
     for solicitud in solicitudes:
+
         estado = solicitud.get("estado", "")
         prioridad = solicitud.get("prioridad", "")
 
@@ -314,7 +352,10 @@ def mostrar_solicitudes(solicitudes):
         elif opcion == "3" and estado == "En proceso":
             solicitudes_filtradas.append(solicitud)
 
-        elif opcion == "4" and estado in ["Atendido", "Atendida"]:
+        elif opcion == "4" and estado in [
+            "Atendido",
+            "Atendida"
+        ]:
             solicitudes_filtradas.append(solicitud)
 
         elif opcion == "5" and prioridad == "Alta":
@@ -327,12 +368,16 @@ def mostrar_solicitudes(solicitudes):
             solicitudes_filtradas.append(solicitud)
 
     if not solicitudes_filtradas:
-        print("[INFO] No existen solicitudes para el filtro seleccionado.")
+        print(
+            "[INFO] No existen solicitudes para "
+            "el filtro seleccionado."
+        )
         return
 
     print("\n===== RESULTADOS =====")
 
     for solicitud in solicitudes_filtradas:
+
         print("\n--------------------------------")
         print(f"Código: {solicitud['codigo']}")
         print(f"Nombre: {solicitud['nombre']}")
@@ -340,7 +385,10 @@ def mostrar_solicitudes(solicitudes):
         print(f"Detalle: {solicitud['detalle']}")
         print(f"Prioridad: {solicitud['prioridad']}")
         print(f"Estado: {solicitud['estado']}")
-        print(f"Fecha: {solicitud.get('fecha', 'No registrada')}")
+        print(
+            f"Fecha: "
+            f"{solicitud.get('fecha', 'No registrada')}"
+        )
         print(
             f"Última actualización: "
             f"{solicitud.get('ultima_actualizacion', 'No registrada')}"
@@ -362,20 +410,25 @@ def mostrar_estadisticas(solicitudes):
     baja = 0
 
     for solicitud in solicitudes:
+
         estado = solicitud.get("estado", "")
         prioridad = solicitud.get("prioridad", "")
 
         if estado == "Pendiente":
             pendientes += 1
+
         elif estado == "En proceso":
             en_proceso += 1
+
         elif estado in ["Atendido", "Atendida"]:
             atendidas += 1
 
         if prioridad == "Alta":
             alta += 1
+
         elif prioridad == "Media":
             media += 1
+
         elif prioridad == "Baja":
             baja += 1
 
@@ -398,9 +451,12 @@ def main():
     mostrar_encabezado()
 
     while True:
+
         mostrar_menu()
 
-        opcion = input("\nSeleccione una opción: ").strip()
+        opcion = input(
+            "\nSeleccione una opción: "
+        ).strip()
 
         if opcion == "1":
             registrar_solicitud(solicitudes)
@@ -415,6 +471,7 @@ def main():
             mostrar_solicitudes(solicitudes)
 
         elif opcion == "5":
+
             confirmar = input(
                 "\n¿Está seguro que desea salir? (S/N): "
             ).strip().upper()
@@ -422,8 +479,11 @@ def main():
             if confirmar == "S":
                 print("\nGracias por utilizar el sistema.")
                 break
+
             else:
-                print("\nRegresando al menú principal...")
+                print(
+                    "\nRegresando al menú principal..."
+                )
 
         elif opcion == "6":
             mostrar_estadisticas(solicitudes)
@@ -439,4 +499,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
