@@ -87,11 +87,18 @@ def validar_consulta(consulta):
 
 
 def validar_prioridad(prioridad):
+    prioridad = prioridad.strip()
+
+    if prioridad == "":
+        print("[ERROR] La prioridad no puede estar vacía.")
+        print("Debe ingresar Alta, Media o Baja.")
+        return False
+
     prioridades = ["Alta", "Media", "Baja"]
 
     if prioridad.capitalize() not in prioridades:
-        print("[ERROR] Prioridad inválida.")
-        print("Debe ingresar: Alta, Media o Baja.")
+        print("[ERROR] La prioridad ingresada no es válida.")
+        print("Solo se permite: Alta, Media o Baja.")
         return False
 
     return True
