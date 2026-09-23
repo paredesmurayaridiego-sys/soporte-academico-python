@@ -179,9 +179,8 @@ def registrar_solicitud(solicitudes):
         "ultima_actualizacion": fecha_actual
     }
 
-    print("\n----------------------------------------------")
-    print("             CONFIRMAR SOLICITUD")
-    print("----------------------------------------------")
+    print("\n===== SOPORTE ACADÉMICO =====")
+    print("Sistema de orientación y registro de atenciones")
     print("Nombre:", solicitud["nombre"])
     print("Código:", solicitud["codigo"])
     print("Consulta:", solicitud["consulta"])
