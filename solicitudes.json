@@ -67,5 +67,65 @@
         "estado": "En proceso",
         "fecha": "21/09/2026 00:07",
         "ultima_actualizacion": "21/09/2026 00:08"
+    },
+    {
+        "codigo": "N00510760",
+        "nombre": "MIRELLA",
+        "consulta": "MATRICULA",
+        "detalle": "no puedo matricularme",
+        "prioridad": "Alta",
+        "estado": "Pendiente",
+        "fecha": "21/09/2026 22:09",
+        "ultima_actualizacion": "21/09/2026 22:09"
+    },
+    {
+        "codigo": "n00540980",
+        "nombre": "francisco",
+        "consulta": "MATRICULA",
+        "detalle": "No puedo ingresar al sistema",
+        "prioridad": "Media",
+        "estado": "Pendiente",
+        "fecha": "21/09/2026 22:16",
+        "ultima_actualizacion": "21/09/2026 22:16"
+    },
+    {
+        "codigo": "N00890765",
+        "nombre": "ROSA",
+        "consulta": "MATRICULA",
+        "detalle": "URGENTE",
+        "prioridad": "Alta",
+        "estado": "Pendiente",
+        "fecha": "21/09/2026 22:30",
+        "ultima_actualizacion": "21/09/2026 22:30"
+    },
+    {
+        "nombre": "Diego Paredes",
+        "codigo": "n12345",
+        "consulta": "Matrícula",
+        "detalle": "problema con mi matricula",
+        "prioridad": "Alta",
+        "estado": "Pendiente",
+        "fecha": "21/09/2026 22:57",
+        "ultima_actualizacion": "21/09/2026 22:57"
+    },
+    {
+        "nombre": "aixa torres",
+        "codigo": "n67890",
+        "consulta": "Constancia",
+        "detalle": "necesito una constancia de estudios",
+        "prioridad": "Baja",
+        "estado": "Pendiente",
+        "fecha": "21/09/2026 23:00",
+        "ultima_actualizacion": "21/09/2026 23:00"
+    },
+    {
+        "nombre": "mia",
+        "codigo": "n54321",
+        "consulta": "Plataforma",
+        "detalle": "no puedo ingresar a la plataforma virtual",
+        "prioridad": "Media",
+        "estado": "Pendiente",
+        "fecha": "21/09/2026 23:03",
+        "ultima_actualizacion": "21/09/2026 23:03"
     }
 ]
